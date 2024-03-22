@@ -4,7 +4,8 @@ import CircleProgress from 'vue3-circle-progress'
 import "vue3-circle-progress/dist/circle-progress.css"
 import { formatearCantidad } from '../helpers';
 
-defineEmits(['reset-app'])
+
+defineEmits(['reset-app','mostar-modal-presupuesto'])
 
 const props = defineProps({
     presupuesto: {
@@ -22,7 +23,7 @@ const props = defineProps({
 })
 
 const porcentaje = computed(() => {
-    return parseInt((props.gastado / props.presupuesto ) * 100 )
+    return parseInt((  props.gastado * 100 ) / props.presupuesto )
 })
 </script>
 
@@ -45,7 +46,10 @@ const porcentaje = computed(() => {
                 type="button"
                 @click="$emit('reset-app')"
             >Resetear App</button>
-            <p>
+            <p
+                class="presupuesto"
+                @click="$emit('mostar-modal-presupuesto')"
+            >
                 <span>Presupuesto:</span>
                 {{ formatearCantidad(presupuesto) }}
             </p>
@@ -111,6 +115,9 @@ const porcentaje = computed(() => {
     }
     .reset-app:hover{
         background-color: #c11d67;
+    }
+    .presupuesto{
+        cursor: pointer;
     }
     @media (width > 768px){
         .dos-columnas{

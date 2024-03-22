@@ -5,6 +5,7 @@ import ControlPresupuesto from './components/ControlPresupuesto.vue';
 import Modal from './components/Modal.vue';
 import Gastos from './components/Gastos.vue';
 import Filtros from './components/Filtros.vue';
+import ModalPresupuesto from './components/ModalPresupuesto.vue';
 import iconoNuevoGasto  from './assets/img/nuevo-gasto.svg';
 import { generarId } from './helpers';
 
@@ -12,6 +13,12 @@ const modal = reactive({
     mostrar: false,
     animar:false
 })
+
+const modalPresupuesto = reactive({
+    mostrar: false,
+    animar:false
+})
+
 const presupuesto = ref(0)
 const disponible = ref(0)
 const gastado = ref(0)
@@ -70,12 +77,28 @@ const mostrarModal = () =>{
         modal.animar = true
     }, 300);
 }
+
+const mostrarModalPresupuesto = () =>{
+    modalPresupuesto.mostrar = true
+    setTimeout(() => {
+        modalPresupuesto.animar = true
+    }, 300);
+}
+
 const ocultarModal = () =>{
     modal.animar = false
     setTimeout(() => {
         modal.mostrar = false
     }, 300);
 }
+
+const ocultarModalPresupuesto = () =>{
+    modalPresupuesto.animar = false
+    setTimeout(() => {
+        modalPresupuesto.mostrar = false
+    }, 300);
+}
+
 const guardarGasto = () =>{
     if(gasto.id){
         //editando
@@ -133,6 +156,11 @@ const resetApp = () =>{
     }
 }
 
+const guardarPresupuesto = (cantidad) =>{
+    presupuesto.value = cantidad
+    ocultarModalPresupuesto()
+}
+
 </script>
 
 <template>
@@ -150,6 +178,7 @@ const resetApp = () =>{
                     :disponible="disponible"
                     :gastado="gastado"
                     @reset-app="resetApp"
+                    @mostar-modal-presupuesto="mostrarModalPresupuesto"
                 />
             </div>
         </header>
@@ -185,6 +214,14 @@ const resetApp = () =>{
                 v-model:nombre="gasto.nombre"
                 v-model:cantidad="gasto.cantidad"
                 v-model:categoria="gasto.categoria"
+            />
+            <ModalPresupuesto
+                v-if="modalPresupuesto.mostrar"
+                @ocultar-modal="ocultarModalPresupuesto"
+                @guardar-presupuesto="guardarPresupuesto"
+                :modal="modalPresupuesto"
+                :presupuesto="presupuesto"
+                :disponible="disponible"
             />
         </main>
     </div>
